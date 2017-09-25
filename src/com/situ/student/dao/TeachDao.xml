@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.situ.student.dao.TeachDao">
+
+	<resultMap type="Banji" id="teachMap">
+		<id column="id" property="id"/>
+		<result column="name" property="name" />
+			<collection property="courseList" ofType="Course">
+				<result column="course_name" property="name" />
+			</collection>
+	</resultMap>
+	<select id="teach" resultMap="teachMap">
+		SELECT b.id,b.name,c.name
+		as
+		course_name
+		FROM banji AS b INNER JOIN
+		banji_course AS bc
+		ON
+		bc.banji_id=b.id INNER JOIN course AS c
+		ON c.id=bc.course_id
+	</select>
+
+	<resultMap type="Student" id="studentMap">
+		<id column="id" property="id" />
+		<result column="name" property="name" />
+		<association property="banji" javaType="Banji">
+			<result column="banji_name" property="name" />
+			<collection property="courseList" ofType="Course">
+				<result column="course_name" property="name" />
+			</collection>
+		</association>
+	</resultMap>
+	<select id="findAll" resultMap="studentMap">
+    SELECT s.id,s.name,b.name as banji_name,c.name as course_name
+    FROM student AS s INNER JOIN banji AS b ON s.banji_id=b.id
+    INNER JOIN banji_course AS bc ON b.id=bc.banji_id
+    INNER JOIN course AS c ON bc.course_id=c.id
+</select>
+	
+<insert id="addCourse">
+	insert into banji_course(banji_id,course_id) values(#{banjiId},#{addCourse})
+</insert>
+
+<delete id="delCourse">
+	DELETE FROM banji_course WHERE banji_id = #{banjiId} AND course_id = #{delCourse}
+</delete>
+
+</mapper>

@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="com.situ.student.dao.StudentDao">
+  	
+  	<resultMap type="Student" id="findAllStudentInfos">
+  		<id column="id" property="id"/>
+  		<result column="name" property="name"/>
+  		<result column="age" property="age"/>
+  		<result column="gender" property="gender"/>
+  		<result column="address" property="address"/>
+  		<result column="birthday" property="birthday"/>
+  		<association property="banji" javaType="Banji">
+  			<id column="banji_id" property="id"/>
+  			<result column="banji_name" property="name"/>
+  		</association>
+  	</resultMap>
+  	<select id="findAll" resultMap="findAllStudentInfos">
+  		SELECT s.id,s.NAME,s.age,s.gender,s.address,s.birthday,b.id AS banji_id,b.name AS banji_name
+		FROM student AS s LEFT JOIN banji AS b 
+		ON s.banji_id=b.id
+  	</select>
+  	
+  	<delete id="deleteStudent" parameterType="int">
+  		delete from student where id = #{id}
+  	</delete>
+	
+	<resultMap type="Student" id="findStudentById">
+		<id column="id" property="id"/>
+		<result column="name" property="name"/>
+		<result column="age" property="age"/>
+		<result column="gender" property="gender"/>
+		<result column="address" property="address"/>
+		<result column="birthday" property="birthday"/>
+		<association property="banji" javaType="Banji">
+			<id column="banji_id" property="id"/>
+			<result column="banji_name" property="name"/>
+		</association>
+	</resultMap>
+	<select id="findById" parameterType="int" resultMap="findStudentById">
+		SELECT s.id,s.NAME,s.age,s.gender,s.address,s.birthday,b.id AS banji_id,b.name AS banji_name
+		FROM student AS s LEFT JOIN banji AS b
+		ON s.banji_id=b.id WHERE s.id = #{id}
+	</select>  	
+  	
+  	<update id="updateStudent" parameterType="Student">
+  		update student
+  		<set>
+  			<if test="name!=null">
+  				name = #{name},
+  			</if>
+  			<if test="age!=null">
+  				age = #{age},
+  			</if>
+  			<if test="gender!=null">
+  				gender = #{gender},
+  			</if>
+  			<if test="address!=null">
+  				address = #{address},
+  			</if>
+  			<if test="birthday!=null">
+  				birthday = #{birthday},
+  			</if>
+  			<if test="banji!=null">
+  				banji_id = #{banji.id},
+  			</if>
+  		</set>
+  		where id = #{id}
+  	</update>
+  	
+  	<insert id="addStudents" parameterType="Student">
+  		insert into student(name,age,gender,address,birthday,banji_id)values(#{name},#{age},#{gender},#{address},#{birthday},#{banji.id})
+  	</insert>
+  	
+	<select id="checkName" parameterType="String" resultType="int">
+		select count(*) from student where name = #{name}
+	</select>  	
+  	
+  	<select id="totalCount" resultType="int">
+  		select count(*) from student
+  	</select>
+  	
+  	<resultMap type="Student" id="pageMap">
+  		<id column="id" property="id"/>
+  		<result column="name" property="name"/>
+  		<result column="age" property="age"/>
+  		<result column="gender" property="gender"/>
+  		<result column="address" property="address"/>
+  		<result column="birthday" property="birthday"/>
+  		<association property="banji" javaType="Banji">
+  			<id column="banji_id" property="id"/>
+  			<result column="banji_name" property="name"/>
+  		</association>
+  	</resultMap>
+  	<select id="pageBeanList" resultMap="pageMap">
+  		 SELECT s.id,s.NAME,s.age,s.gender,s.address,s.birthday,b.id AS banji_id,b.name AS banji_name
+		FROM student AS s LEFT JOIN banji AS b 
+		ON s.banji_id=b.id limit #{pageIndex},#{pageSize}
+  	</select>
+  	
+  	<select id="totalCountByCondition" parameterType="FindByCondition" resultType="int">
+  		select count(*) from student
+  		<where>
+  			<if test="name!=null and name.equals('')">
+  				and name like '%${name}%' 
+  			</if>
+  			<if test="age!=null and !age.equals('')">
+  				and age = #{age} 
+  			</if>
+  			<if test="gender!=null and !gender.equals('')">
+  				and gender = #{gender} 
+  			</if>
+  		</where>
+  	</select>
+  	
+  	<resultMap type="Student" id="findConditionMap">
+  		<id column="id" property="id"/>
+  		<result column="name" property="name"/>
+  		<result column="age" property="age"/>
+  		<result column="gender" property="gender"/>
+  		<result column="address" property="address"/>
+  		<result column="birthday" property="birthday"/>
+  		<association property="banji" javaType="Banji">
+  			<id column="banji_id" property="id"/>
+  			<result column="banji_name" property="name"/>
+  		</association>
+  	</resultMap>
+  	<select id="findCondition" parameterType="Map" resultMap="findConditionMap">
+  		 SELECT s.id,s.NAME,s.age,s.gender,s.address,s.birthday,b.id AS banji_id,b.name AS banji_name
+		FROM student AS s LEFT JOIN banji AS b 
+		ON s.banji_id=b.id  
+		<where>
+			<if test="condition.name!=null and !condition.name.equals('')">
+  				and s.name like '%${condition.name}%' 
+  			</if>
+  			<if test="condition.age!=null and !condition.age.equals('')">
+  				and s.age = #{condition.age} 
+  			</if>
+  			<if test="condition.gender!=null and !condition.gender.equals('')">
+  				and s.gender = #{condition.gender} 
+  			</if>
+		</where>
+			limit #{index},#{condition.pageSize}
+  	</select>
+  	
+  	
+  	
+  </mapper>

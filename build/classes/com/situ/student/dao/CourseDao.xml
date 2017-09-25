@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+   <mapper namespace="com.situ.student.dao.CourseDao">
+   
+   <select id="totalCount" resultType="int">
+   		select count(*) from course
+   </select>
+   
+   <select id="pageBeanList" resultType="Course">
+   		select * from course limit #{pageIndex},#{pageSize}
+   </select>
+   
+   <select id="findAll" resultType="Course">
+   		select * from course
+   </select>
+   
+   <select id="totalCountByCondition" parameterType="findCourseByCondition" resultType="int">
+   		select count(*) from course
+   		<where>
+   			<if test="name != null and !name.equals('')">
+   				and name = #{name}
+   			</if>
+   			<if test="credit != null and !credit.equals('')">
+   				and credit = #{credit}
+   			</if>
+   		</where>
+   </select>
+   
+   <select id="pageBeanListByCondition" parameterType="Map" resultType="Course">
+   		select * from course
+   		<where>
+   			<if test="findCourseByCondition.name != null and !findCourseByCondition.name.equals('')">
+   				and name = #{findCourseByCondition.name}
+   			</if>
+   			<if test="findCourseByCondition.credit != null and !findCourseByCondition.credit.equals('')">
+   				and credit = #{findCourseByCondition.credit}
+   			</if>
+   		</where>
+   			limit #{index},#{findCourseByCondition.pageSize}
+   </select>
+   
+   <delete id="delete" parameterType="int">
+   		delete from course where id = #{id}
+   </delete>
+   
+   <insert id="add">
+   		insert into course(name,credit) value(#{name},#{credit})
+   </insert>
+   
+   <select id="findById" parameterType="int" resultType="Course">
+   		select * from course where id = #{id}
+   </select>
+   
+   <update id="update" parameterType="Course">
+   		update course
+   		<set>
+  			<if test="name!=null">
+  				name = #{name},
+  			</if>
+  			<if test="credit!=null">
+  				credit = #{credit},
+  			</if>
+  		</set>
+  		where id = #{id}
+   </update>
+   </mapper>
