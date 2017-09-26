@@ -49,4 +49,28 @@
 	DELETE FROM banji_course WHERE banji_id = #{banjiId} AND course_id = #{delCourse}
 </delete>
 
+
+<resultMap type="Student" id="findStudent">
+	<id property="id" column="id"/>
+	<result property="name" column="name"/>
+	<result property="age" column="age"/>
+	<result property="gender" column="gender"/>
+	<result property="address" column="address"/>
+	<result property="birthday" column="birthday"/>
+	<association property="banji" javaType="Banji">
+		<result column="banji_name" property="name"/>
+		<collection property="courseList" ofType="Course">
+			<result column="course_name" property="name"/>
+			<result column="course_credit" property="credit"/>
+		</collection>
+	</association>
+</resultMap>
+<select id="findByName" parameterType="String" resultMap="findStudent">
+	SELECT s.id,s.name,s.age,s.gender,s.address,s.birthday,b.name as banji_name,c.name as course_name,c.credit as course_credit 
+	FROM student AS s INNER JOIN banji AS b
+	ON s.banji_id=b.id INNER JOIN banji_course AS bc 
+	ON b.id=bc.banji_id INNER JOIN course AS c ON
+	c.id=bc.course_id where s.name LIKE '%${value}%'
+</select>
+
 </mapper>

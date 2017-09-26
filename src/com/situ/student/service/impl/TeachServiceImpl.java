@@ -1,6 +1,7 @@
 package com.situ.student.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.situ.student.dao.TeachDao;
 import com.situ.student.pojo.Banji;
 import com.situ.student.pojo.Course;
+import com.situ.student.pojo.SearchStudent;
 import com.situ.student.pojo.Student;
 import com.situ.student.pojo.Teach;
 import com.situ.student.service.ITeachService;
@@ -104,7 +106,7 @@ public class TeachServiceImpl implements ITeachService{
 				for (Course course : banji.getCourseList()) {
 				
 					if(banji.getId() == banjiId){
-						 courseName =courseName + "  , " + course.getName();
+						 courseName =courseName + "   " + course.getName();
 					}
 				}
 			}
@@ -123,6 +125,54 @@ public class TeachServiceImpl implements ITeachService{
 	@Override
 	public void delCourse(int parseInt, int parseInt2) {
 		teachDao.delCourse(parseInt,parseInt2);
+	}
+
+	@Override
+	public List<Student> findByName(String studentName) {
+		return teachDao.findByName(studentName);
+	}
+
+	@Override
+	public List<SearchStudent> changeStudentInfo(List<Student> oldList) {
+		Set<Integer> set = new HashSet<Integer>();
+		for (Student student : oldList) {
+			Integer stuId = student.getId();
+			set.add(stuId);
+		}
+		String name = null;
+		Integer age = 0;
+		String gender = null;
+		String address = null;
+		Date birthday = null;
+		String banjiName = null;
+		String courseName = "";
+		Integer credit = 0;
+		List<SearchStudent> list = new ArrayList<SearchStudent>();
+		for (Integer integer : set) {
+			for (Student student : oldList) {
+				if(integer==student.getId()){
+					name = student.getName();
+					age = student.getAge();
+					gender = student.getGender();
+					address = student.getAddress();
+					birthday = student.getBirthday();
+					banjiName = student.getBanji().getName();
+				}
+				for (Student stu : oldList) {
+					for (Course course : stu.getBanji().getCourseList() ) {
+						if(integer == stu.getId()){
+							courseName = courseName + "    " + course.getName();
+							credit = credit+course.getCredit();
+						}
+					}
+				}
+			}
+			SearchStudent searchStudent = new SearchStudent(integer,name, age, gender, address, birthday, banjiName, courseName, credit);
+			list.add(searchStudent);
+			courseName = "";
+			credit = 0;
+		}
+		return list;
 	}
 
 

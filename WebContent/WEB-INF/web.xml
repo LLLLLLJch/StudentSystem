@@ -69,14 +69,14 @@
 
 
 
-	<filter>
+<!-- 	<filter>
 		<filter-name>LoginFilter</filter-name>
 		<filter-class>com.situ.student.filter.LoginFilter</filter-class>
 	</filter>
 	<filter-mapping>
 		<filter-name>LoginFilter</filter-name>
 		<url-pattern>/*</url-pattern>
-	</filter-mapping>
+	</filter-mapping> -->
 
 	<listener>
 		<listener-class>com.situ.student.listener.OnlineAdmitListListener</listener-class>

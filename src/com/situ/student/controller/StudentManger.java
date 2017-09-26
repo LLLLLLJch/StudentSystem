@@ -104,7 +104,7 @@ public class StudentManger {
 
 	@RequestMapping(value = "/addStudents")
 	public String addStudents(HttpServletRequest req) {
-		/* service.addStudents(student); */
+		
 		String name = req.getParameter("name");
 		System.out.println(name + "dsfffffffffffffffff");
 		String age = req.getParameter("age");

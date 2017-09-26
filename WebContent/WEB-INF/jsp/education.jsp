@@ -74,8 +74,11 @@
 					<li class="active"><a
 						href="${pageContext.request.contextPath}/banjiCourse/changeBanjiCourse.action">教务管理</a>
 					</li>
-					<li><a
-						href="${pageContext.request.contextPath}/jsp/student_credit.jsp">教务查询</a>
+					<li>
+						<form action="${pageContext.request.contextPath}/teach/searchStudentInfo.action" method="post">
+							<input type = "text" name="studentName"/>
+							<input type = "submit" value="提交"/>
+						</form>
 					</li>
 				</ul>
 				<table

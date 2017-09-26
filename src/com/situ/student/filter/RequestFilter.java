@@ -42,7 +42,7 @@ public class RequestFilter implements Filter {
 			throws IOException, ServletException {
 		HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 		  HttpServletResponse httpServletResponse = (HttpServletResponse) response;
-		String uri = httpServletRequest.getRequestURI();
+		/*String uri = httpServletRequest.getRequestURI();
 		System.out.println(uri);
 		String requestPath = uri.substring(uri.lastIndexOf("/") + 1, uri.length());
 		if (requestPath.equals("login.jsp")|| requestPath.equals("fail.jsp")
@@ -58,16 +58,16 @@ public class RequestFilter implements Filter {
 			if (admit == null) {
 				httpServletResponse.sendRedirect(httpServletRequest.getContextPath() + "/login/getLoginPage.action");
 				return;
-			} else {
+			} else {*/
 				
 				List<Banji> banji_list = banjiService.findAllBanji();
 				List<Course> course_list = courseService.findAll();
 				httpServletRequest.setAttribute("banji_list", banji_list);
 				httpServletRequest.setAttribute("course_list", course_list);
 				chain.doFilter(request, response);
-			}
+		/*	}
 
-		}
+		}*/
 
 	}
 
